@@ -26,7 +26,7 @@ struct Model
     noise: Perlin,
 }
 
-const N_THINGS: usize = 3000;
+const N_THINGS: usize = 3500;
 
 fn model(app: &App) -> Model {
     let _window = app.new_window().size(1024,1024).view(view).build().unwrap();
@@ -51,7 +51,7 @@ fn model(app: &App) -> Model {
 
 fn update(_app: &App, model: &mut Model, _update: Update) 
 {
-    let sn = 0.008;
+    let sn = 0.0079;
     for thing in model.things.iter_mut() 
     {   
         thing.positions.clear();
@@ -60,7 +60,7 @@ fn update(_app: &App, model: &mut Model, _update: Update)
             (random::<f32>()-0.5)*1024.0,
         ));
 
-        for _i in 0..45
+        for _i in 0..18
         {
             let last = thing.positions[0];
             let new = last + vec2(
@@ -76,17 +76,11 @@ fn update(_app: &App, model: &mut Model, _update: Update)
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
 
-
-    // if app.elapsed_frames() == 1
-    // {
-    //     draw.background().color(BLACK);
-    // }
-
     draw.rect().w_h(1024.0,1024.0).color(srgba(0.145, 0.26, 0.92, 0.06));
 
     for thing in model.things.iter()
     {
-        draw.polyline().points(thing.positions.iter().cloned()).color(GOLD);
+        draw.polyline().weight(1.0).points(thing.positions.iter().cloned()).color(hsl(0.07, 0.97, 0.53));
     }
     
     draw.to_frame(app, &frame).unwrap();
