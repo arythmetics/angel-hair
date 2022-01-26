@@ -1,5 +1,7 @@
 use nannou::prelude::*;
 use nannou::noise::*;
+use nannou::rand::*;
+use rand_distr::{Normal, Distribution};
 
 fn main() {
     nannou::app(model).update(update).run();
@@ -26,7 +28,7 @@ struct Model
     noise: Perlin,
 }
 
-const N_THINGS: usize = 3500;
+const N_THINGS: usize = 4000;
 
 fn model(app: &App) -> Model {
     let _window = app.new_window().size(1024,1024).view(view).build().unwrap();
@@ -60,7 +62,7 @@ fn update(_app: &App, model: &mut Model, _update: Update)
             (random::<f32>()-0.5)*1024.0,
         ));
 
-        for _i in 0..18
+        for _i in 0..19
         {
             let last = thing.positions[0];
             let new = last + vec2(
@@ -75,12 +77,14 @@ fn update(_app: &App, model: &mut Model, _update: Update)
 
 fn view(app: &App, model: &Model, frame: Frame) {
     let draw = app.draw();
+    let normal = Normal::new(0.5, 0.1).unwrap();
+    let v = normal.sample(&mut rand::thread_rng());
 
     draw.rect().w_h(1024.0,1024.0).color(srgba(0.145, 0.26, 0.92, 0.06));
 
     for thing in model.things.iter()
-    {
-        draw.polyline().weight(1.0).points(thing.positions.iter().cloned()).color(hsl(0.07, 0.97, 0.53));
+    {   
+        draw.polyline().weight(1.0).points(thing.positions.iter().cloned()).color(hsl(0.07, 0.97, v));
     }
     
     draw.to_frame(app, &frame).unwrap();
